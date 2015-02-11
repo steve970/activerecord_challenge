@@ -112,7 +112,15 @@ Using http://api.rubyonrails.org/classes/ActiveRecord/QueryMethods.html and your
 
   `account_holder_id, first_name, last_name, all_debit_transactions, all_credit_transactions`
 
-    1. `SQL`:
+    1. `SQL`: SELECT account_id, first_name, last_name
+              SUM (case when transaction_type_id = 1 then amount_in_cents else 0 end) as all_debit_transactions,
+              SUM (case when transaction_type_id = 2 then amount_in_cents ELSE 0 END)
+              AS all_credit_transactions
+              FROM transactions
+              INNER JOIN account_holders
+              ON transaction.account_holder_id = account_holders.id
+              GROUP BY account_id, first_name, last_name
+              ORDER BY account_id;
 
     2. `ActiveRecord`:
 
